@@ -1,0 +1,2 @@
+module SnippetUploadsHelper
+end

@@ -1,0 +1,18 @@
+<p>
+  <strong>Title:</strong>
+  <%= @snippet_upload.title %>
+  <%= @snippet_upload.user %>
+</p>
+
+
+ 
+<% @snippet_upload.files.each do |file| %>
+	<%= link_to file.filename, url_for(file) %>
+	<br>
+<% end %>
+
+
+ 
+
+<%= link_to 'Edit', edit_snippet_upload_path(@snippet_upload) %> |
+<%= link_to 'Back', snippet_uploads_path %>
