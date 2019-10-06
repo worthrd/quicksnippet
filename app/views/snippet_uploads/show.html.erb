@@ -1,7 +1,10 @@
 <p>
   <strong>Title:</strong>
   <%= @snippet_upload.title %>
-  <%= @snippet_upload.user %>
+  <%if @snippet_upload.user!=nil %>
+	  <strong>User:</strong>
+	  <%= @snippet_upload.user.email %>
+  <%end%>
 </p>
 
 

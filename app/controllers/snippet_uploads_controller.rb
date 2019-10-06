@@ -29,8 +29,14 @@ class SnippetUploadsController < ApplicationController
   def create
     @snippet_upload = SnippetUpload.new(snippet_upload_params)
 
+    @snippet_upload.user = current_user
+
     respond_to do |format|
       if @snippet_upload.save
+        @snippet_upload.files.each do |file|
+          upload_to_snippet(file,current_user,@snippet_upload)
+        end
+
         format.html { redirect_to @snippet_upload, notice: 'Snippet upload was successfully created.' }
         format.json { render :show, status: :created, location: @snippet_upload }
       else
@@ -64,6 +70,16 @@ class SnippetUploadsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def upload_to_snippet(file,user,snippet_upload)
+    content = file.download
+    content_s =  content.bytes.pack("c*").force_encoding("UTF-8") 
+    if file.name.end_width?(".sqlprompt")
+      
+    end
+    post = Post.new(title: 'xxx', content: @s_content, user: user, snippet_upload: snippet_upload)
+    post.save
+  end 
 
   private
     # Use callbacks to share common setup or constraints between actions.
