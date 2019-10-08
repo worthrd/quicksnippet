@@ -1,3 +1,7 @@
+require "rexml/document"
+include REXML 
+
+
 class SnippetUploadsController < ApplicationController
 
   before_action :authenticate_user!
@@ -74,11 +78,16 @@ class SnippetUploadsController < ApplicationController
   def upload_to_snippet(file,user,snippet_upload)
     content = file.download
     content_s =  content.bytes.pack("c*").force_encoding("UTF-8") 
-    if file.name.end_width?(".sqlprompt")
-      
-    end
-    post = Post.new(title: 'xxx', content: @s_content, user: user, snippet_upload: snippet_upload)
-    post.save
+    if file.filename.to_s.ends_with? ".sqlpromptsnippet"
+       doc = Document.new content_s
+       title = XPath.first(doc, "//CodeSnippets/CodeSnippet/Header/Title").text
+       snippet_text = XPath.first(doc, "//CodeSnippets/CodeSnippet/Snippet/Code").text
+       post = Post.new(title: title, content: snippet_text, user: user, snippet_upload: snippet_upload)
+       post.save
+    else
+       post = Post.new(title: snippet_upload.title, content: content_s, user: user, snippet_upload: snippet_upload)
+       post.save
+    end 
   end 
 
   private
